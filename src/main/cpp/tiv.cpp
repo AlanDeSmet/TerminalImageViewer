@@ -457,6 +457,11 @@ int main(int argc, char* argv[]) {
 	if (image.width() > maxWidth || image.height() > maxHeight) {
 	  double scale = std::min(maxWidth / (double) image.width(), maxHeight / (double) image.height());
 	  image.resize((int) (image.width() * scale), (int) (image.height() * scale), -100, -100, 5);
+	} else if(image.width() < 4 || image.height() < 8) {
+	  // If the image isn't at least 4x8, emit_image won't render anything!
+	  // nearest neighbor expand to at least 4x8
+	  int scale = int(std::max(ceil(4.0/image.width()), ceil(8.0/image.height())));
+	  image.resize((int) (image.width() * scale), (int) (image.height() * scale), -100, -100, 1);
 	}
 	emit_image(image, flags);
       } catch(cimg_library::CImgIOException & e) {
